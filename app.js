@@ -1,3 +1,11 @@
+const removeActiveBtn = () => {
+    const categoryBtns = document.getElementsByClassName('category-btn');
+    for (let btn of categoryBtns) {
+        btn.classList.remove('activeBtnStyle');
+        btn.classList.add('category-btn-style');
+    }
+}
+
 const loadCategories = async () => {
     const url = `https://openapi.programming-hero.com/api/peddy/categories`;
     const res = await fetch(url);
@@ -11,9 +19,9 @@ const displayCategories = (categories) => {
         const { category, category_icon } = categoryItem
         const categorybtn = document.createElement('div');
         categorybtn.innerHTML = `
-        <button class="category-btn-style category-btn w-[150px] md:w-[250px] mx-auto mb-4 ">
+        <button id="btn-${category}" onclick="loadCategoryPets('${category}')" class="category-btn-style category-btn w-[150px] md:w-[250px] mx-auto mb-4 ">
         
-                    <span><img src=${category_icon} /></span>
+                    <span><img class=" h-[30px] md:h-[50px]" src=${category_icon} /></span>
                     <span> ${category}</sapn>
         </button>
         
@@ -27,11 +35,26 @@ const loadPets = async () => {
     const res = await fetch(url);
     const data = await res.json();
     displayPets(data.pets);
+
 };
 
 const displayPets = (pets) => {
     const petsContainer = document.getElementById('pets-container');
-
+    petsContainer.innerHTML = "";
+    if (pets.length === 0) {
+        petsContainer.innerHTML = `
+        
+        <div class="w-[300px] md:w-[985px] py-10 bg-gray-200 flex flex-col items-center justify-center gap-5 mx-auto mb-5 rounded-[24px]"?>
+        <div> 
+        <img src="images/error.webp" />
+        </div>
+        <h3 class="text-[#131313] font-[Inter] text-[24px] md:text-[32px] font-bold">No Information Available</h3>
+        <p class="text-[#131313B2]  w-[250px] md:w-[300px] text-center font-[Lato] text-[16px] font-normal"> This Category pet's currently not available right Now !! </p>
+        </div>
+        
+        
+        `;
+    }
     pets.forEach((pet) => {
         const { price, gender, date_of_birth, image, breed, pet_name } = pet;
 
@@ -39,7 +62,7 @@ const displayPets = (pets) => {
         card.innerHTML = `
         
         
-              <div class="card bg-base-100 w-96 shadow-sm">
+              <div class="card bg-base-100 w-[300px] md:w-[300px] shadow-sm mx-auto">
         <figure class="px-10 pt-10">
           <img
             src=${image}
@@ -72,7 +95,19 @@ const displayPets = (pets) => {
 
 
     });
-}
+};
+
+const loadCategoryPets = async (category) => {
+    const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const categoryBtn = document.getElementById(`btn-${category}`);
+
+    removeActiveBtn()
+    categoryBtn.classList.remove('category-btn-style');
+    categoryBtn.classList.add('activeBtnStyle');
+    displayPets(data.data);
+};
 
 
 
