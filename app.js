@@ -39,7 +39,7 @@ const loadPets = async () => {
 };
 
 const displayPets = (pets) => {
-    const petsContainer = document.getElementById('pets-container');
+    const petsContainer = document.getElementById('pets-section-container');
     petsContainer.innerHTML = "";
     if (pets.length === 0) {
         petsContainer.innerHTML = `
@@ -98,15 +98,23 @@ const displayPets = (pets) => {
 };
 
 const loadCategoryPets = async (category) => {
-    const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    const petsContainer = document.getElementById('pets-section-container');
+    petsContainer.innerHTML = "";
+    const spinnerLoader = document.getElementById('spinner');
+    spinnerLoader.classList.remove('hidden');
     const categoryBtn = document.getElementById(`btn-${category}`);
-
-    removeActiveBtn()
     categoryBtn.classList.remove('category-btn-style');
     categoryBtn.classList.add('activeBtnStyle');
-    displayPets(data.data);
+    removeActiveBtn()
+
+    setTimeout(async () => {
+        const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        spinnerLoader.classList.add('hidden');
+        displayPets(data.data);
+
+    }, 2000);
 };
 
 
