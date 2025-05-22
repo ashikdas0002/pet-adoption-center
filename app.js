@@ -102,10 +102,11 @@ const loadCategoryPets = async (category) => {
     petsContainer.innerHTML = "";
     const spinnerLoader = document.getElementById('spinner');
     spinnerLoader.classList.remove('hidden');
+    removeActiveBtn()
     const categoryBtn = document.getElementById(`btn-${category}`);
     categoryBtn.classList.remove('category-btn-style');
     categoryBtn.classList.add('activeBtnStyle');
-    removeActiveBtn()
+
 
     setTimeout(async () => {
         const url = `https://openapi.programming-hero.com/api/peddy/category/${category}`;
@@ -114,7 +115,10 @@ const loadCategoryPets = async (category) => {
         spinnerLoader.classList.add('hidden');
         displayPets(data.data);
 
+
     }, 2000);
+
+
 };
 
 
