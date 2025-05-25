@@ -56,18 +56,18 @@ const displayPets = (pets) => {
         `;
     }
     pets.forEach((pet) => {
-        const { price, gender, date_of_birth, image, breed, pet_name } = pet;
+        const { price, gender, date_of_birth, image, breed, pet_name, petId } = pet;
 
         const card = document.createElement('div');
         card.innerHTML = `
         
         
-              <div class="card bg-base-100 w-[300px] md:w-[300px] shadow-sm mx-auto">
-        <figure class="px-10 pt-10">
+              <div class="card bg-base-100 w-[300px] md:w-[320px] shadow-sm mx-auto">
+        <figure  class="px-4 pt-10">
           <img
             src=${image}
             alt="Pets"
-            class="rounded-xl" />
+            class=" w-[200px] rounded-xl" />
         </figure>
         <div class="card-body ">
           <h2 class="text-[#131313ea] font-[Inter] text-[20px] font-bold">${pet_name}</h2>
@@ -75,12 +75,12 @@ const displayPets = (pets) => {
           <p class="flex items-center gap-2"><span> <img src="images/icon-1.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Breed: ${!breed ? "Not Available" : breed}</span> </p>
           <p class="flex items-center gap-2"><span> <img src="images/icon-2.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Birth: ${!date_of_birth ? "Not Available" : date_of_birth}</span> </p>
           <p class="flex items-center gap-2"><span> <img src="images/icon-3.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Gender: ${!gender ? "Not Available" : gender}</span> </p>
-          <p class="flex items-center gap-2"><span> <img src="images/icon-4.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Price: ${!price ? "To be Continue" : price}$</span> </p>
+          <p class="flex items-center gap-2"><span> <img src="images/icon-4.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Price: ${!price ? "To be Continue" : `${price}$`}</span> </p>
           </div>
           <div class="border-t-2 border-gray-200 rounded-sm"> </div>
           <div class="card-actions flex items-center justify-between">
-          <button class="btn "><img src="images/icon-5.svg"/></button>
-          <button class="btn  text-[#0E7A81] font-bold text-[18px] font-[Lato]">Adopt</button>
+          <button onclick="likedPets(${petId})" class="btn "><img src="images/icon-5.svg"/></button>
+          <button id="btn-${petId}" onclick="adtoptPets(${petId})" class="btn  text-[#0E7A81] font-bold text-[18px] font-[Lato]">Adopt</button>
           <button class="btn  text-[#0E7A81] font-bold text-[18px] font-[Lato]">Details</button>
           
           </div>
@@ -120,6 +120,44 @@ const loadCategoryPets = async (category) => {
 
 
 };
+
+const likedPets = async (petId) => {
+    const likedPets = document.getElementById('liked-pets-container');
+    const uri = `https://openapi.programming-hero.com/api/peddy/pet/${petId}`;
+    const res = await fetch(uri);
+    const data = await res.json();
+    const pet = data.petData;
+    likedPets.innerHTML = `
+    
+    
+   <img src =${pet.image} />
+    
+    `
+
+};
+
+const adtoptPets = async (adoptPetId) => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/peddy/pet/${adoptPetId}`);
+    const data = await res.json();
+    const petId = data.petData.petId;
+    const adoptPetMoal = document.getElementById('adoptionModal');
+    adoptPetMoal.showModal();
+    const petIdBtn = document.getElementById(`btn-${petId}`);
+    const countDown = document.getElementById('countDown');
+    let count = 3;
+    countDown.innerText = count;
+    const interval = setInterval(() => {
+        count--;
+        countDown.innerText = count;
+        if (count === 0) {
+            clearInterval(interval);
+            adoptPetMoal.close();
+            petIdBtn.innerText = "Adopted";
+            petIdBtn.classList.add('btn-disabled');
+        }
+    }, 1000);
+
+}
 
 
 
