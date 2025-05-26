@@ -81,7 +81,7 @@ const displayPets = (pets) => {
           <div class="card-actions flex items-center justify-between">
           <button onclick="likedPets(${petId})" class="btn "><img src="images/icon-5.svg"/></button>
           <button id="btn-${petId}" onclick="adtoptPets(${petId})" class="btn  text-[#0E7A81] font-bold text-[18px] font-[Lato]">Adopt</button>
-          <button class="btn  text-[#0E7A81] font-bold text-[18px] font-[Lato]">Details</button>
+          <button onclick="DisplayPetsDetails(${petId})" class="btn  text-[#0E7A81] font-bold text-[18px] font-[Lato]">Details</button>
           
           </div>
         </div>
@@ -157,7 +157,60 @@ const adtoptPets = async (adoptPetId) => {
         }
     }, 1000);
 
-}
+};
+
+const DisplayPetsDetails = async (petId) => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/peddy/pet/${petId}`);
+    const data = await res.json();
+    const petDetails = data.petData;
+    console.log(petDetails);
+    const { price, gender, date_of_birth, image, breed, pet_name, vaccinated_status, pet_details
+    } = petDetails;
+    document.getElementById('detailsModal').showModal();
+    const petDetailsContainer = document.getElementById('pet-details-container');
+    petDetailsContainer.innerHTML = `
+    
+ <div> 
+ <figure class="px-4 pt-4">
+          <img
+            src=${image}
+            alt="Pets"
+            class=" h-full w-full object-cover rounded-sm" />
+        </figure>
+         <div>
+            <h2 class="text-[#131313ea] font-[Inter] text-[24px] md:text-[32px] font-bold">${pet_name}</h2>
+         <div class="md:flex  gap-4"> 
+         <div>
+         <p class="flex items-center gap-2"><span> <img src="images/icon-1.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Breed: ${!breed ? "Not Available" : breed}</span> </p>
+         <p class="flex items-center gap-2"><span> <img src="images/icon-3.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Gender: ${!gender ? "Not Available" : gender}</span> </p>
+         <p class="flex items-center gap-2"><span> <img src="images/icon-3.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Vaccinated status: ${vaccinated_status}</span> </p>
+         
+         
+         </div>
+          
+          <div> 
+          <p class="flex items-center gap-2"><span> <img src="images/icon-2.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Birth: ${!date_of_birth ? "Not Available" : date_of_birth}</span> </p>
+           <p class="flex items-center gap-2"><span> <img src="images/icon-4.svg"/> </span> <span class="text-[#131313B2] font-[Lato] text-[20px] font-normal">Price: ${!price ? "To be Continue" : `${price}$`}</span> </p>
+          </div>
+         
+         </div>
+         
+          
+          </div>
+          <div class="border-b-1 border-gray-300 py-2 "> </div>
+          <h4 class="text-[#131313] font-[Inter] text-[24px] md:text-[30px] font-semibold" >Details Information </h4>
+        <p class="text-[#131313B2] font-[Inter] font-normal text-[16px]">${pet_details}</p>
+ <div class="flex items-center justify-center"> 
+ 
+    <button class="btn w-[80%] bg-[#0E7A811A] border-1 border-[#0E7A8133] text-center mt-4 text-[#0E7A81] font-[Lato] text-[20px] font-bold" onclick="document.getElementById('detailsModal').close()">Cancel</button>
+ 
+ </div>
+        
+    
+    `;
+
+
+};
 
 
 
