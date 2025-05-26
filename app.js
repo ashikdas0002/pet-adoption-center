@@ -212,6 +212,17 @@ const DisplayPetsDetails = async (petId) => {
 
 };
 
+const sortByPrice = async () => {
+    const uri = `https://openapi.programming-hero.com/api/peddy/pets`;
+    const res = await fetch(uri);
+    const data = await res.json();
+    const pets = data.pets;
+    let allPets = [];
+    allPets = pets.sort((a, b) => (a.price || 0) - (b.price || 0));
+    displayPets(allPets);
+
+}
+
 
 
 loadCategories();
