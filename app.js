@@ -127,12 +127,11 @@ const likedPets = async (petId) => {
     const res = await fetch(uri);
     const data = await res.json();
     const pet = data.petData;
-    likedPets.innerHTML = `
-    
-    
-   <img src =${pet.image} />
-    
-    `
+    const img = document.createElement('img');
+    img.src = pet.image;
+    img.classList.add('w-[100px]', 'md:w-[120px]', 'rounded-md', 'mx-2', 'my-2');
+    likedPets.appendChild(img);
+
 
 };
 
